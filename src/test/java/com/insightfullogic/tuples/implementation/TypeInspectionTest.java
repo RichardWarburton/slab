@@ -20,15 +20,25 @@ public class TypeInspectionTest {
     public void findsGetters() {
         assertEquals(3, inspector.getters.size());
         
-        List<String> methods = getterNames();
+        List<String> methods = getNames(inspector.getters);
         assertTrue(methods.contains("getStrength"));
         assertTrue(methods.contains("getTarget"));
         assertTrue(methods.contains("getId"));
     }
+    
+    @Test
+    public void findsSetters() {
+        assertEquals(3, inspector.setters.size());
+        
+        List<String> methods = getNames(inspector.setters);
+        assertTrue(methods.contains("setStrength"));
+        assertTrue(methods.contains("setTarget"));
+        assertTrue(methods.contains("setId"));
+    }
 
-    private List<String> getterNames() {
+    private List<String> getNames(List<Method> methods) {
     	List<String> names = new ArrayList<String>();
-    	for (Method getter : inspector.getters) {
+    	for (Method getter : methods) {
 			names.add(getter.getName());
 		}
     	return names;

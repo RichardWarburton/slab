@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.insightfullogic.tuples.InvalidInterfaceException;
 
-
 public class TypeInspector {
     
     private final Class<?> klass;
@@ -18,8 +17,10 @@ public class TypeInspector {
         this.klass = klass;
         getters = findGetters();
         setters = findSetters();
+        if ((getters.size() + setters.size()) != klass.getDeclaredMethods().length)
+			throw new InvalidInterfaceException(klass.getName() + " has methods that are neither getters nor setters");
     }
-    
+
 	private List<Method> findGetters() {
         List<Method> methods = new ArrayList<Method>();
         for (Method method : klass.getDeclaredMethods()) {

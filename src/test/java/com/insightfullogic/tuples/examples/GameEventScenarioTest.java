@@ -5,27 +5,36 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.insightfullogic.tuples.Contiguous;
-import com.insightfullogic.tuples.BlockAllocator;
+import com.insightfullogic.tuples.Allocator;
 
 public class GameEventScenarioTest {
 
 	@Test
 	public void eventScenario() {
-		BlockAllocator<GameEvent> tuples = BlockAllocator.of(GameEvent.class);
+		Allocator<GameEvent> tuples = Allocator.of(GameEvent.class);
 
-		Contiguous<GameEvent> events = tuples.allocate(100);
-		assertNotNull(events);
+		GameEvent event = tuples.allocate(100);
+		assertNotNull(event);
 
-		GameEvent event = events.get(0);
 		event.setId(5);
 		event.setStrength(100);
 		event.setTarget(2);
 
-		GameEvent theSameEvent = events.get(0);
-		assertEquals(5, theSameEvent.getId());
-		assertEquals(100, theSameEvent.getStrength());
-		assertEquals(2, theSameEvent.getTarget());
+		event.move(1);
+		
+		event.setId(6);
+		event.setStrength(101);
+		event.setTarget(3);
+
+		assertEquals(6, event.getId());
+		assertEquals(101, event.getStrength());
+		assertEquals(3, event.getTarget());
+
+		event.move(0);
+		
+		assertEquals(5, event.getId());
+		assertEquals(100, event.getStrength());
+		assertEquals(2, event.getTarget());
 	}
 
 }

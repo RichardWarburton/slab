@@ -1,6 +1,8 @@
 package com.insightfullogic.tuples.examples;
 
-public interface GameEvent {
+import com.insightfullogic.tuples.Cursor;
+
+public interface GameEvent extends Cursor {
 
     public int getId();
 

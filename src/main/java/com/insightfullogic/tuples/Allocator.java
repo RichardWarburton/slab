@@ -1,33 +1,33 @@
 package com.insightfullogic.tuples;
 
 import com.insightfullogic.tuples.implementation.CodeGen;
-import com.insightfullogic.tuples.implementation.Constructor;
 import com.insightfullogic.tuples.implementation.TypeInspector;
-
 
 /**
  * An array of Tuples of <T>.
  */
-public final class BlockAllocator<T> {
+public final class Allocator<T extends Cursor> {
 
 	private final Class<T> representingKlass;
 	private final TypeInspector inspector;
     private final Class<T> implementation;
-    private final Constructor<T> constructor;
 
-    public static <T> BlockAllocator<T> of(Class<T> representingKlass) throws InvalidInterfaceException {
-        return new BlockAllocator<T>(representingKlass);
+    public static <T extends Cursor> Allocator<T> of(Class<T> representingKlass) throws InvalidInterfaceException {
+        return new Allocator<T>(representingKlass);
     }
 
-    private BlockAllocator(Class<T> representingKlass) {
+    private Allocator(Class<T> representingKlass) {
         this.representingKlass = representingKlass;
 		inspector = new TypeInspector(representingKlass);
         implementation = new CodeGen<T>(inspector, representingKlass).generate();
-        constructor = null; // TODO
     }
 
-	public Contiguous<T> allocate(int count) {
-		return new Contiguous<T>(count, inspector.getSizeInBytes(), representingKlass);
+	public T allocate(int count) {
+		try {
+			return implementation.getConstructor(Integer.TYPE).newInstance(count);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }
