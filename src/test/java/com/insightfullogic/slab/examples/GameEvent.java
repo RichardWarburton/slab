@@ -1,6 +1,6 @@
-package com.insightfullogic.tuples.examples;
+package com.insightfullogic.slab.examples;
 
-import com.insightfullogic.tuples.Cursor;
+import com.insightfullogic.slab.Cursor;
 
 public interface GameEvent extends Cursor {
 

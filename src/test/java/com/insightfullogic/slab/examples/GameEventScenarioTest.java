@@ -1,19 +1,19 @@
-package com.insightfullogic.tuples.examples;
+package com.insightfullogic.slab.examples;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.insightfullogic.tuples.Allocator;
+import com.insightfullogic.slab.Allocator;
 
 public class GameEventScenarioTest {
 
 	@Test
 	public void eventScenario() {
-		Allocator<GameEvent> tuples = Allocator.of(GameEvent.class);
+		Allocator<GameEvent> eventAllocator = Allocator.of(GameEvent.class);
 
-		GameEvent event = tuples.allocate(100);
+		GameEvent event = eventAllocator.allocate(100);
 		assertNotNull(event);
 
 		event.setId(5);
@@ -21,7 +21,7 @@ public class GameEventScenarioTest {
 		event.setTarget(2);
 
 		event.move(1);
-		
+
 		event.setId(6);
 		event.setStrength(101);
 		event.setTarget(3);
@@ -31,7 +31,7 @@ public class GameEventScenarioTest {
 		assertEquals(3, event.getTarget());
 
 		event.move(0);
-		
+
 		assertEquals(5, event.getId());
 		assertEquals(100, event.getStrength());
 		assertEquals(2, event.getTarget());

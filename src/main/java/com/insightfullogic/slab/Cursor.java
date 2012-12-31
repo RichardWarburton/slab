@@ -1,4 +1,4 @@
-package com.insightfullogic.tuples;
+package com.insightfullogic.slab;
 
 public interface Cursor extends AutoCloseable {
 

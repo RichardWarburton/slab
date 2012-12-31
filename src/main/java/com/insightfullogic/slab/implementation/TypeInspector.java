@@ -1,17 +1,19 @@
-package com.insightfullogic.tuples.implementation;
+package com.insightfullogic.slab.implementation;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.insightfullogic.tuples.InvalidInterfaceException;
+import com.insightfullogic.slab.InvalidInterfaceException;
 
 public class TypeInspector {
     
     private final Class<?> klass;
     
     final List<Method> getters;
-    final List<Method> setters;
+    final Map<String, Method> setters;
     
     public TypeInspector(Class<?> klass) {
         this.klass = klass;
@@ -44,21 +46,19 @@ public class TypeInspector {
         	throw new InvalidInterfaceException(method.getName() + " is a getter that doesn't return a primitive");
     }
 
-    public int primitiveSize(Method method) {
-        String returnType = method.getReturnType().getName();
-        Types type = Types.valueOf(returnType.toUpperCase());
-        return type.sizeOf;
+    Primitive getReturn(Method method) {
+        return Primitive.of(method.getReturnType());
     }
-    
-	private List<Method> findSetters() {
-        List<Method> methods = new ArrayList<Method>();
+
+	private Map<String, Method> findSetters() {
+		Map<String, Method> methods = new HashMap<String, Method>();
         for (Method method : klass.getDeclaredMethods()) {
             if (!method.getName().startsWith("set"))
                 continue;
 
             returnsVoid(method);
             hasOnePrimitiveParameter(method);
-            methods.add(method);
+            methods.put(method.getName(), method);
         }
         return methods;
 	}
@@ -80,7 +80,7 @@ public class TypeInspector {
 	public int getSizeInBytes() {
         int total = 0;
         for (Method getter : getters) {
-            total += primitiveSize(getter);
+            total += getReturn(getter).sizeInBytes;
         }
         return total;
     }
@@ -88,5 +88,13 @@ public class TypeInspector {
     public int getFieldCount() {
         return getters.size();
     }
+
+	public Method setterFor(Method getter) {
+		String name = getter.getName().replaceFirst("get", "set");
+		Method method = setters.get(name);
+		if (method == null)
+			throw new InvalidInterfaceException("Unable to find setter with name: " + name);
+		return method;
+	}
 
 }

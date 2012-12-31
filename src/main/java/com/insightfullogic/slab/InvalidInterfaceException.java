@@ -1,6 +1,6 @@
-package com.insightfullogic.tuples;
+package com.insightfullogic.slab;
 
-public class InvalidInterfaceException extends RuntimeException {
+public final class InvalidInterfaceException extends RuntimeException {
 
 	private static final long serialVersionUID = -3754457562115913877L;
 

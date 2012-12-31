@@ -1,16 +1,18 @@
-package com.insightfullogic.tuples.implementation;
+package com.insightfullogic.slab.implementation;
 
-import static com.insightfullogic.tuples.implementation.Types.LONG;
+import static com.insightfullogic.slab.implementation.Primitive.LONG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
 
-import com.insightfullogic.tuples.examples.GameEvent;
+import com.insightfullogic.slab.examples.GameEvent;
+import com.insightfullogic.slab.implementation.TypeInspector;
 
 public class TypeInspectionTest {
     
@@ -30,13 +32,13 @@ public class TypeInspectionTest {
     public void findsSetters() {
         assertEquals(3, inspector.setters.size());
         
-        List<String> methods = getNames(inspector.setters);
+        List<String> methods = getNames(inspector.setters.values());
         assertTrue(methods.contains("setStrength"));
         assertTrue(methods.contains("setTarget"));
         assertTrue(methods.contains("setId"));
     }
 
-    private List<String> getNames(List<Method> methods) {
+    private List<String> getNames(Collection<Method> methods) {
     	List<String> names = new ArrayList<String>();
     	for (Method getter : methods) {
 			names.add(getter.getName());
@@ -47,7 +49,7 @@ public class TypeInspectionTest {
     @Test
     public void correctFieldSize() throws Exception {
         Method getStrength = GameEvent.class.getMethod("getStrength");
-        assertEquals(LONG.sizeOf, inspector.primitiveSize(getStrength));
+        assertEquals(LONG.sizeInBytes, inspector.getReturn(getStrength).sizeInBytes);
     }
 
     @Test

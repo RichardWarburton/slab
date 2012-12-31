@@ -1,4 +1,4 @@
-package com.insightfullogic.tuples;
+package com.insightfullogic.slab;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -7,6 +7,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import com.insightfullogic.slab.Allocator;
+import com.insightfullogic.slab.Cursor;
+import com.insightfullogic.slab.InvalidInterfaceException;
 
 @RunWith(Parameterized.class)
 public class InvalidInterfaceTest {

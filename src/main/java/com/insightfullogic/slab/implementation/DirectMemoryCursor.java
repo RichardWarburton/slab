@@ -1,15 +1,19 @@
-package com.insightfullogic.tuples.implementation;
+package com.insightfullogic.slab.implementation;
 
 import java.lang.reflect.Field;
 
+import org.objectweb.asm.Type;
+
 import sun.misc.Unsafe;
 
-import com.insightfullogic.tuples.Cursor;
+import com.insightfullogic.slab.Cursor;
 
 @SuppressWarnings("restriction")
 public abstract class DirectMemoryCursor implements Cursor {
 	
-	private static final Unsafe unsafe;
+	static final String INTERNAL_NAME = Type.getInternalName(DirectMemoryCursor.class);
+	
+	protected static final Unsafe unsafe;
 
 	static {
 		try {
