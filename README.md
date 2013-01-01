@@ -15,14 +15,14 @@ Code Example
     }
 
     // Create an allocator for your DataType
-  	Allocator<GameEvent> eventAllocator = Allocator.of(GameEvent.class);
+    Allocator<GameEvent> eventAllocator = Allocator.of(GameEvent.class);
 
     // Allocate 100 off heap GameEvent instances - sequentially in memory
-		GameEvent event = eventAllocator.allocate(100);
+    GameEvent event = eventAllocator.allocate(100);
 
     // Move to the index of the instance that you want to read from or write to
-		event.move(1);
+    event.move(1);
 
     // set and get values like a normal POJO
-		event.setId(6);
+    event.setId(6);
     assertEquals(6, event.getId());
