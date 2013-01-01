@@ -32,7 +32,8 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
         implementationName = "DirectMemory" + representingKlass.getSimpleName();
     }
 
-    public Class<T> generate() {
+    @SuppressWarnings("unchecked")
+	public Class<T> generate() {
     	ClassWriter out = new ClassWriter(ClassWriter.COMPUTE_MAXS);
     	CheckClassAdapter writer = new CheckClassAdapter(out);
     	
