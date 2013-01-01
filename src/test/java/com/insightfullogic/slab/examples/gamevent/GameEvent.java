@@ -1,4 +1,4 @@
-package com.insightfullogic.slab.examples;
+package com.insightfullogic.slab.examples.gamevent;
 
 import com.insightfullogic.slab.Cursor;
 
@@ -12,8 +12,8 @@ public interface GameEvent extends Cursor {
 
     public void setStrength(long value);
 
-    public long getTarget();
+    public int getTarget();
     
-    public void setTarget(long value);
+    public void setTarget(int value);
 
 }

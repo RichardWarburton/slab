@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.insightfullogic.slab.examples.GameEvent;
+import com.insightfullogic.slab.examples.gamevent.GameEvent;
 import com.insightfullogic.slab.implementation.TypeInspector;
 
 public class TypeInspectionTest {
@@ -54,7 +54,7 @@ public class TypeInspectionTest {
 
     @Test
     public void tupleSize() throws Exception {
-        assertEquals(20, inspector.getSizeInBytes());
+        assertEquals(16, inspector.getSizeInBytes());
     }
 
     @Test

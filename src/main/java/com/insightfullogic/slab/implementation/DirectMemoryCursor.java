@@ -38,7 +38,7 @@ public abstract class DirectMemoryCursor implements Cursor {
 		pointer = startAddress;
 	}
 
-	public void close() throws Exception {
+	public void close() {
 		unsafe.freeMemory(startAddress);
 	}
 

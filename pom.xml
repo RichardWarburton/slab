@@ -6,6 +6,11 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Tuples</name>
 	<description>Generic implementation of off-heap tuples</description>
+
+	<properties>
+		<slf4jVersion>1.6.1</slf4jVersion>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -17,6 +22,18 @@
 			<groupId>asm</groupId>
 			<artifactId>asm-all</artifactId>
 			<version>20070324</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4jVersion}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.9</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

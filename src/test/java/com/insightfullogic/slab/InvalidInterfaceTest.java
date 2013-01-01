@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.insightfullogic.slab.Allocator;
 import com.insightfullogic.slab.Cursor;
@@ -14,6 +16,8 @@ import com.insightfullogic.slab.InvalidInterfaceException;
 
 @RunWith(Parameterized.class)
 public class InvalidInterfaceTest {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(InvalidInterfaceTest.class);
 
 	@Parameters
 	public static Collection<Object[]> data() {
@@ -30,7 +34,7 @@ public class InvalidInterfaceTest {
 	@Test(expected = InvalidInterfaceException.class)
 	public void interfaceIsInvalid() {
 		Allocator.of(representingKlass);
-		System.err.println(representingKlass.getName());
+		LOGGER.error(representingKlass.getName() + " failed");
 	}
 
 	// ---------------------------------------------------
