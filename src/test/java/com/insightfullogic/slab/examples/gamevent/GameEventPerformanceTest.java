@@ -100,7 +100,7 @@ public class GameEventPerformanceTest {
         final long writes = middle - start;
         LOGGER.info("Read durection of {} run is {}\n", values.name(), reads);
         LOGGER.info("Write durection of {} run is {}\n", values.name(), writes);
-        return writes;
+        return reads + writes;
 	}
 
 }
