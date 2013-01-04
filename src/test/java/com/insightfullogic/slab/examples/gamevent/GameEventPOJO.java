@@ -43,4 +43,8 @@ public class GameEventPOJO implements GameEvent {
 		this.target = target;
 	}
 
+	public void resize(int size) {
+		throw new UnsupportedOperationException();
+	}
+
 }

@@ -27,7 +27,9 @@ public final class Allocator<T extends Cursor> {
 		}
     }
 
-	public T allocate(int count) {
+	public T allocate(int count) throws InvalidSizeException {
+		if (count < 1)
+			throw new InvalidSizeException("You must provide a count >= 1 when allocating a slab, received " + count);
 		try {
 			return constructor.newInstance(count);
 		} catch (RuntimeException e) {

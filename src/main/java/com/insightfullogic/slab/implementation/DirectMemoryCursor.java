@@ -7,6 +7,7 @@ import org.objectweb.asm.Type;
 import sun.misc.Unsafe;
 
 import com.insightfullogic.slab.Cursor;
+import com.insightfullogic.slab.InvalidSizeException;
 
 @SuppressWarnings("restriction")
 public abstract class DirectMemoryCursor implements Cursor {
@@ -50,4 +51,12 @@ public abstract class DirectMemoryCursor implements Cursor {
 	public int getIndex() {
 		return index;
 	}
+
+	public void resize(int newSize) {
+		if (newSize <= index)
+			throw new InvalidSizeException("You can't resize a slab to below the index currently pointed at");
+
+		unsafe.reallocateMemory(startAddress, sizeInBytes * newSize);
+	}
+
 }
