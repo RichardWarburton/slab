@@ -2,6 +2,7 @@ package com.insightfullogic.slab.implementation;
 
 import static org.objectweb.asm.Type.LONG_TYPE;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import org.objectweb.asm.ClassVisitor;
@@ -19,11 +20,15 @@ import com.insightfullogic.slab.Cursor;
 @SuppressWarnings("restriction")
 public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 	
+	private static final String GENERATED_CONSTRUCTOR = "(ILcom/insightfullogic/slab/implementation/AllocationHandler;)V";
 	private static final String UNSAFE_NAME = Type.getInternalName(Unsafe.class);
 	private static final String UNSAFE_DESCRIPTOR = Type.getType(Unsafe.class).getDescriptor();
+	private static final String PARENT_CONSTRUCTOR;
+	static {
+		Constructor<?> constructor = DirectMemoryCursor.class.getConstructors()[0];
+		PARENT_CONSTRUCTOR = Type.getConstructorDescriptor(constructor);
+	}
 	
-	private static final byte TRUE = 1, FALSE = 0;
-
     private final TypeInspector inspector;
     private final Class<T> representingKlass;
 	private final String implementationName;
@@ -58,17 +63,19 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
     }
 
     private void declareConstructor(CheckClassAdapter writer) {
-    	MethodVisitor method = writer.visitMethod(ACC_PUBLIC, "<init>", "(I)V", null, null);
+//    	System.out.println(PARENT_CONSTRUCTOR);
+    	MethodVisitor method = writer.visitMethod(ACC_PUBLIC, "<init>", GENERATED_CONSTRUCTOR, null, null);
     	method.visitCode();
 		method.visitVarInsn(ALOAD, 0);
 		method.visitVarInsn(ILOAD, 1);
 		method.visitLdcInsn(inspector.getSizeInBytes());
+		method.visitVarInsn(ALOAD, 2);
 		method.visitMethodInsn(INVOKESPECIAL,
 				DirectMemoryCursor.INTERNAL_NAME,
 				"<init>",
-				"(II)V");
+				PARENT_CONSTRUCTOR);
 		method.visitInsn(RETURN);
-		method.visitMaxs(2, 2);
+		method.visitMaxs(3, 3);
 		method.visitEnd();
     }
 

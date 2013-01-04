@@ -27,19 +27,22 @@ public abstract class DirectMemoryCursor implements Cursor {
 	}
 	
 	private final int sizeInBytes;
-	private int index;
+	private final AllocationHandler handler;
 	protected final long startAddress;
-	
+
+	private int index;
 	protected long pointer;
 
-	public DirectMemoryCursor(int count, int sizeInBytes) {
+	public DirectMemoryCursor(int count, int sizeInBytes, AllocationHandler handler) {
 		this.sizeInBytes = sizeInBytes;
+		this.handler = handler;
 		startAddress = unsafe.allocateMemory(sizeInBytes * count);
 
 		move(0);
 	}
 
 	public void close() {
+		handler.free();
 		unsafe.freeMemory(startAddress);
 	}
 
@@ -56,7 +59,9 @@ public abstract class DirectMemoryCursor implements Cursor {
 		if (newSize <= index)
 			throw new InvalidSizeException("You can't resize a slab to below the index currently pointed at");
 
-		unsafe.reallocateMemory(startAddress, sizeInBytes * newSize);
+		int newSizeInBytes = sizeInBytes * newSize;
+		handler.resize(newSize, newSizeInBytes);
+		unsafe.reallocateMemory(startAddress, newSizeInBytes);
 	}
 
 }

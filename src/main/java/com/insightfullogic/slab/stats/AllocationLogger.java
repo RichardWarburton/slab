@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.insightfullogic.slab.Allocator;
 
+
 public class AllocationLogger implements AllocationListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AllocationLogger.class);
