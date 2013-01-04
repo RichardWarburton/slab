@@ -26,9 +26,11 @@ public class TypeInspector {
 	private List<Method> findGetters() {
         List<Method> methods = new ArrayList<Method>();
         for (Method method : klass.getDeclaredMethods()) {
-            if (!method.getName().startsWith("get"))
+            String name = method.getName();
+			if (!name.startsWith("get"))
                 continue;
 
+			doesntUseIndex(name);
             returnsPrimitive(method);
             hasNoParameters(method);
             methods.add(method);
@@ -36,7 +38,12 @@ public class TypeInspector {
         return methods;
     }
 	
-    private void hasNoParameters(Method method) {
+    private void doesntUseIndex(String name) {
+		if ("getIndex".equals(name))
+			throw new InvalidInterfaceException("You can't declare an index field, since that name is used by Slab");
+	}
+
+	private void hasNoParameters(Method method) {
         if (method.getParameterTypes().length != 0)
             throw new InvalidInterfaceException(method.getName() + " is a getter with one or more parameters");
     }

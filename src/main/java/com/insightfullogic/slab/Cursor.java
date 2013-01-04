@@ -15,6 +15,8 @@ public interface Cursor extends Closeable {
 	 */
 	public void move(int index);
 	
+	public int getIndex();
+
 	/**
 	 * Frees memory allocated to this slab.
 	 */

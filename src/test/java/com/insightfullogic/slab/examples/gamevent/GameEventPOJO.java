@@ -12,6 +12,10 @@ public class GameEventPOJO implements GameEvent {
 	public void move(int index) {
 		throw new UnsupportedOperationException();
 	}
+	
+	public int getIndex() {
+		throw new UnsupportedOperationException();
+	}
 
 	public void close() {}
 

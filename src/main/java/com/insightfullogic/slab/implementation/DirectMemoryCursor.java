@@ -26,6 +26,7 @@ public abstract class DirectMemoryCursor implements Cursor {
 	}
 	
 	private final int sizeInBytes;
+	private int index;
 	protected final long startAddress;
 	
 	protected long pointer;
@@ -33,9 +34,8 @@ public abstract class DirectMemoryCursor implements Cursor {
 	public DirectMemoryCursor(int count, int sizeInBytes) {
 		this.sizeInBytes = sizeInBytes;
 		startAddress = unsafe.allocateMemory(sizeInBytes * count);
-		
-		// Initially point at object index 0
-		pointer = startAddress;
+
+		move(0);
 	}
 
 	public void close() {
@@ -43,7 +43,11 @@ public abstract class DirectMemoryCursor implements Cursor {
 	}
 
 	public void move(int index) {
+		this.index = index;
 		pointer = startAddress + (sizeInBytes * index);
 	}
 
+	public int getIndex() {
+		return index;
+	}
 }

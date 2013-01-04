@@ -15,12 +15,14 @@ public class GameEventScenarioTest {
 
 		GameEvent event = eventAllocator.allocate(100);
 		assertNotNull(event);
+		assertEquals(0, event.getIndex());
 
 		event.setId(5);
 		event.setStrength(100);
 		event.setTarget(2);
 
 		event.move(1);
+		assertEquals(1, event.getIndex());
 
 		event.setId(6);
 		event.setStrength(101);
@@ -31,6 +33,7 @@ public class GameEventScenarioTest {
 		assertEquals(3, event.getTarget());
 
 		event.move(0);
+		assertEquals(0, event.getIndex());
 
 		assertEquals(5, event.getId());
 		assertEquals(100, event.getStrength());

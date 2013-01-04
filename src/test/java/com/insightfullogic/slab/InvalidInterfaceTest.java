@@ -22,7 +22,7 @@ public class InvalidInterfaceTest {
 	@Parameters
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] { { NoGettersOrSetters.class }, { InvalidReturnGetter.class }, { ParameterGetter.class },
-				{ InvalidReturnSetter.class }, { NoParameterSetter.class } });
+				{ InvalidReturnSetter.class }, { NoParameterSetter.class }, { IndexField.class } });
 	}
 
 	private Class<? extends Cursor> representingKlass;
@@ -57,6 +57,11 @@ public class InvalidInterfaceTest {
 
 	public interface NoParameterSetter extends Cursor {
 		public void setFoo();
+	}
+
+	public interface IndexField extends Cursor {
+		public int getIndex();
+		public void setIndex(int index);
 	}
 
 }
