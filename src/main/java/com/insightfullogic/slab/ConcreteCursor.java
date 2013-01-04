@@ -1,4 +1,4 @@
-package com.insightfullogic.slab.implementation;
+package com.insightfullogic.slab;
 
 import java.lang.reflect.Field;
 
@@ -6,14 +6,12 @@ import org.objectweb.asm.Type;
 
 import sun.misc.Unsafe;
 
-import com.insightfullogic.slab.Cursor;
-import com.insightfullogic.slab.InvalidSizeException;
+import com.insightfullogic.slab.implementation.AllocationHandler;
 
 @SuppressWarnings("restriction")
-public abstract class DirectMemoryCursor implements Cursor {
-	
-	static final String INTERNAL_NAME = Type.getInternalName(DirectMemoryCursor.class);
-	
+public abstract class ConcreteCursor implements Cursor {
+
+
 	protected static final Unsafe unsafe;
 
 	static {
@@ -25,7 +23,7 @@ public abstract class DirectMemoryCursor implements Cursor {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private final int sizeInBytes;
 	private final AllocationHandler handler;
 	protected final long startAddress;
@@ -33,7 +31,7 @@ public abstract class DirectMemoryCursor implements Cursor {
 	private int index;
 	protected long pointer;
 
-	public DirectMemoryCursor(int count, int sizeInBytes, AllocationHandler handler) {
+	public ConcreteCursor(int count, int sizeInBytes, AllocationHandler handler) {
 		this.sizeInBytes = sizeInBytes;
 		this.handler = handler;
 		startAddress = unsafe.allocateMemory(sizeInBytes * count);

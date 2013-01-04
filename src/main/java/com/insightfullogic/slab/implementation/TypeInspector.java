@@ -1,11 +1,15 @@
 package com.insightfullogic.slab.implementation;
 
+import static java.lang.reflect.Modifier.isAbstract;
+import static java.util.Arrays.asList;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.insightfullogic.slab.ConcreteCursor;
 import com.insightfullogic.slab.InvalidInterfaceException;
 
 public class TypeInspector {
@@ -17,11 +21,22 @@ public class TypeInspector {
     
     public TypeInspector(Class<?> klass) {
         this.klass = klass;
+        if(!klass.isInterface() && !ConcreteCursor.class.isAssignableFrom(klass))
+        	throw new InvalidInterfaceException("concrete classes must sublass ConcreteCursor");
+        
         getters = findGetters();
         setters = findSetters();
-        if ((getters.size() + setters.size()) != klass.getDeclaredMethods().length)
-			throw new InvalidInterfaceException(klass.getName() + " has methods that are neither getters nor setters");
+        checkRemainingMethods(klass);
     }
+
+	private void checkRemainingMethods(Class<?> klass) {
+		List<Method> methods = new ArrayList<Method>(asList(klass.getDeclaredMethods()));
+		methods.removeAll(getters);
+		methods.removeAll(setters.values());
+        for (Method method : methods)
+			if (isAbstract(method.getModifiers()))
+				throw new InvalidInterfaceException(klass.getName() + " has abstract methods that are neither getters nor setters");
+	}
 
 	private List<Method> findGetters() {
         List<Method> methods = new ArrayList<Method>();
@@ -30,6 +45,7 @@ public class TypeInspector {
 			if (!name.startsWith("get"))
                 continue;
 
+			ensureAbstract(method);
 			doesntUseIndex(name);
             returnsPrimitive(method);
             hasNoParameters(method);
@@ -38,7 +54,12 @@ public class TypeInspector {
         return methods;
     }
 	
-    private void doesntUseIndex(String name) {
+    private void ensureAbstract(Method method) {
+		if (!isAbstract(method.getModifiers()))
+			throw new InvalidInterfaceException(method + " must be abstract, since its a getter or setter");
+	}
+
+	private void doesntUseIndex(String name) {
 		if ("getIndex".equals(name))
 			throw new InvalidInterfaceException("You can't declare an index field, since that name is used by Slab");
 	}
@@ -63,6 +84,7 @@ public class TypeInspector {
             if (!method.getName().startsWith("set"))
                 continue;
 
+            ensureAbstract(method);
             returnsVoid(method);
             hasOnePrimitiveParameter(method);
             methods.put(method.getName(), method);

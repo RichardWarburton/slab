@@ -16,27 +16,39 @@ import org.objectweb.asm.util.CheckClassAdapter;
 import sun.misc.Unsafe;
 
 import com.insightfullogic.slab.Cursor;
+import com.insightfullogic.slab.ConcreteCursor;
 
 @SuppressWarnings("restriction")
 public class BytecodeGenerator<T extends Cursor> implements Opcodes {
-	
+
 	private static final String GENERATED_CONSTRUCTOR = "(ILcom/insightfullogic/slab/implementation/AllocationHandler;)V";
 	private static final String UNSAFE_NAME = Type.getInternalName(Unsafe.class);
 	private static final String UNSAFE_DESCRIPTOR = Type.getType(Unsafe.class).getDescriptor();
-	private static final String PARENT_CONSTRUCTOR;
+	private static final String DIRECT_CLASS_NAME = Type.getInternalName(ConcreteCursor.class);
+	private static final String DIRECT_CLASS_CONSTRUCTOR;
 	static {
-		Constructor<?> constructor = DirectMemoryCursor.class.getConstructors()[0];
-		PARENT_CONSTRUCTOR = Type.getConstructorDescriptor(constructor);
+		Constructor<?> constructor = ConcreteCursor.class.getConstructors()[0];
+		DIRECT_CLASS_CONSTRUCTOR = Type.getConstructorDescriptor(constructor);
 	}
-	
+
     private final TypeInspector inspector;
-    private final Class<T> representingKlass;
+    private final String classExtended;
+    private final String constructorExtended;
 	private final String implementationName;
+	private final String[] interfacesImplemented;
 
     public BytecodeGenerator(TypeInspector inspector, Class<T> representingKlass) {
         this.inspector = inspector;
-        this.representingKlass = representingKlass;
         implementationName = "DirectMemory" + representingKlass.getSimpleName();
+        if (representingKlass.isInterface()) {
+        	classExtended =  DIRECT_CLASS_NAME;
+        	constructorExtended = DIRECT_CLASS_CONSTRUCTOR;
+        	interfacesImplemented = new String[] { Type.getInternalName(representingKlass) };
+        } else {
+        	classExtended = Type.getInternalName(representingKlass);
+        	constructorExtended = Type.getConstructorDescriptor(representingKlass.getConstructors()[0]);
+        	interfacesImplemented = null;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -57,13 +69,10 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
     }
 
     private void declareClass(ClassVisitor writer) {
-    	String classExtended = DirectMemoryCursor.INTERNAL_NAME;
-    	String[] interfacesImplemented = new String[] { Type.getInternalName(representingKlass) };
     	writer.visit(V1_6, ACC_PUBLIC + ACC_SUPER, implementationName, null, classExtended, interfacesImplemented);
     }
 
     private void declareConstructor(CheckClassAdapter writer) {
-//    	System.out.println(PARENT_CONSTRUCTOR);
     	MethodVisitor method = writer.visitMethod(ACC_PUBLIC, "<init>", GENERATED_CONSTRUCTOR, null, null);
     	method.visitCode();
 		method.visitVarInsn(ALOAD, 0);
@@ -71,9 +80,9 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 		method.visitLdcInsn(inspector.getSizeInBytes());
 		method.visitVarInsn(ALOAD, 2);
 		method.visitMethodInsn(INVOKESPECIAL,
-				DirectMemoryCursor.INTERNAL_NAME,
+				classExtended,
 				"<init>",
-				PARENT_CONSTRUCTOR);
+				constructorExtended);
 		method.visitInsn(RETURN);
 		method.visitMaxs(3, 3);
 		method.visitEnd();
@@ -138,7 +147,7 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 
 	private void declareUnsafe(int fieldOffset, MethodVisitor method) {
 		// DirectMemoryCursor.unsafe
-		method.visitFieldInsn(GETSTATIC, DirectMemoryCursor.INTERNAL_NAME, "unsafe", UNSAFE_DESCRIPTOR);
+		method.visitFieldInsn(GETSTATIC, DIRECT_CLASS_NAME, "unsafe", UNSAFE_DESCRIPTOR);
 
 		// this.pointer  + fieldOffset
 		method.visitVarInsn(ALOAD, 0);

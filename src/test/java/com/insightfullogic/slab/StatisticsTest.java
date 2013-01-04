@@ -38,6 +38,6 @@ public class StatisticsTest {
 
 		event.close();
 		assertEquals(32, freed);
-	}
 
+	}
 }
