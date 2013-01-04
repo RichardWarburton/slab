@@ -1,4 +1,4 @@
-package com.insightfullogic.slab.examples.gamevent;
+package com.insightfullogic.slab.performance;
 
 import static org.junit.Assert.assertTrue;
 
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.insightfullogic.slab.Allocator;
+import com.insightfullogic.slab.GameEvent;
 
 /**
  * TODO: make this test more scientific:

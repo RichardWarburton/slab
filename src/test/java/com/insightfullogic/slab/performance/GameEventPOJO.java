@@ -1,4 +1,6 @@
-package com.insightfullogic.slab.examples.gamevent;
+package com.insightfullogic.slab.performance;
+
+import com.insightfullogic.slab.GameEvent;
 
 
 public class GameEventPOJO implements GameEvent {

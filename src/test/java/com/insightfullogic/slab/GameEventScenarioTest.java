@@ -1,4 +1,4 @@
-package com.insightfullogic.slab.examples.gamevent;
+package com.insightfullogic.slab;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

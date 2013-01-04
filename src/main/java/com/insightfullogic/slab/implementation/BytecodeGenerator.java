@@ -21,6 +21,8 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 	
 	private static final String UNSAFE_NAME = Type.getInternalName(Unsafe.class);
 	private static final String UNSAFE_DESCRIPTOR = Type.getType(Unsafe.class).getDescriptor();
+	
+	private static final byte TRUE = 1, FALSE = 0;
 
     private final TypeInspector inspector;
     private final Class<T> representingKlass;
@@ -94,7 +96,7 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 		declareUnsafe(fieldOffset, method);
 		
 		// unsafe.getLong
-		String unsafeGetter = "get" + type.camelCaseName();
+		String unsafeGetter = "get" + type.unsafeMethodSuffix();
 		String unsafeDescriptor = getUnsafeMethodDescriptor(unsafeGetter, Long.TYPE);
 		method.visitMethodInsn(INVOKEVIRTUAL, UNSAFE_NAME, unsafeGetter, unsafeDescriptor);
 
@@ -109,11 +111,11 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 		method.visitLabel(start);
 		declareUnsafe(fieldOffset, method);
 
-		// load parameter
+		// load parameter 1
 		method.visitVarInsn(type.loadOpcode, 1);
 
 		// unsafe.putLong
-		String unsafeSetter = "put" + type.camelCaseName();
+		String unsafeSetter = "put" + type.unsafeMethodSuffix();
 		String unsafeDescriptor = getUnsafeMethodDescriptor(unsafeSetter, Long.TYPE, type.javaEquivalent);
 		method.visitMethodInsn(INVOKEVIRTUAL, UNSAFE_NAME, unsafeSetter, unsafeDescriptor);
 
@@ -143,6 +145,7 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 			Method method = Unsafe.class.getMethod(methodName, types);
 			return Type.getMethodDescriptor(method);
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

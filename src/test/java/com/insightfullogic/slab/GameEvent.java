@@ -1,4 +1,4 @@
-package com.insightfullogic.slab.examples.gamevent;
+package com.insightfullogic.slab;
 
 import com.insightfullogic.slab.Cursor;
 
