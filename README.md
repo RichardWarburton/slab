@@ -1,6 +1,8 @@
 Slab
 ====
 
+There is a good description [here](http://www.insightfullogic.com/blog/2013/jan/3/slab-guaranteed-heap-alignment-jvm/)
+
 tl;dr: Offheap Java Tuples that look like POJOs with guaranteed memory alignment.
 
 Code Example
