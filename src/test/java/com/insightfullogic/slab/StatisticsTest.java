@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import com.insightfullogic.slab.stats.AllocationListener;
 
-
 public class StatisticsTest {
 
 	private static long allocated = 0;
@@ -31,13 +30,15 @@ public class StatisticsTest {
 	public void stats() {
 		Allocator<GameEvent> eventAllocator = Allocator.of(GameEvent.class, COUNTER);
 		GameEvent event = eventAllocator.allocate(1);
-		assertEquals(16, allocated);
+		try {
+			assertEquals(16, allocated);
 
-		event.resize(2);
-		assertEquals(16, resized);
-
-		event.close();
+			event.resize(2);
+			assertEquals(16, resized);
+		} finally {
+			event.close();
+		}
 		assertEquals(32, freed);
-
 	}
+
 }

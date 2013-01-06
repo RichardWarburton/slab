@@ -2,8 +2,6 @@ package com.insightfullogic.slab;
 
 import java.lang.reflect.Field;
 
-import org.objectweb.asm.Type;
-
 import sun.misc.Unsafe;
 
 import com.insightfullogic.slab.implementation.AllocationHandler;
@@ -11,6 +9,11 @@ import com.insightfullogic.slab.implementation.AllocationHandler;
 @SuppressWarnings("restriction")
 public abstract class ConcreteCursor implements Cursor {
 
+	private static final int NOTHING = 0;
+
+	public static final String BOUNDS_CHECKING_PROPERTY = "slab.checkbounds";
+
+	private static final boolean boundsChecking = "true".equals(System.getProperty(BOUNDS_CHECKING_PROPERTY));
 
 	protected static final Unsafe unsafe;
 
@@ -26,12 +29,15 @@ public abstract class ConcreteCursor implements Cursor {
 
 	private final int sizeInBytes;
 	private final AllocationHandler handler;
-	protected final long startAddress;
 
+
+	private int count;
 	private int index;
+	protected long startAddress;
 	protected long pointer;
 
 	public ConcreteCursor(int count, int sizeInBytes, AllocationHandler handler) {
+		this.count = count;
 		this.sizeInBytes = sizeInBytes;
 		this.handler = handler;
 		startAddress = unsafe.allocateMemory(sizeInBytes * count);
@@ -40,11 +46,17 @@ public abstract class ConcreteCursor implements Cursor {
 	}
 
 	public void close() {
+		if (startAddress == NOTHING)
+			return;
+
 		handler.free();
 		unsafe.freeMemory(startAddress);
+		startAddress = NOTHING;
 	}
 
 	public void move(int index) {
+		if (boundsChecking && index >= count)
+			throw new ArrayIndexOutOfBoundsException(index);
 		this.index = index;
 		pointer = startAddress + (sizeInBytes * index);
 	}
@@ -53,13 +65,16 @@ public abstract class ConcreteCursor implements Cursor {
 		return index;
 	}
 
-	public void resize(int newSize) {
-		if (newSize <= index)
+	public void resize(int newCount) {
+		if (newCount <= index)
 			throw new InvalidSizeException("You can't resize a slab to below the index currently pointed at");
 
-		int newSizeInBytes = sizeInBytes * newSize;
-		handler.resize(newSize, newSizeInBytes);
-		unsafe.reallocateMemory(startAddress, newSizeInBytes);
+		count = newCount;
+		int newSizeInBytes = sizeInBytes * newCount;
+		handler.resize(newCount, newSizeInBytes);
+
+		startAddress = unsafe.reallocateMemory(startAddress, newSizeInBytes);
+		move(index);
 	}
 
 }

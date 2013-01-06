@@ -12,9 +12,11 @@ public interface Cursor extends Closeable {
 	 * Move to the specified index.
 	 * 
 	 * @param index the index to move to.
+	 * @throws ArrayIndexOutOfBoundsException if you're trying to move to an index beyond the end of the array.
+	 * NB: this is only thrown if bounds checking is enabled
 	 */
-	public void move(int index);
-	
+	public void move(int index) throws ArrayIndexOutOfBoundsException;
+
 	/**
 	 * Return the current index of the flyweight.
 	 * 

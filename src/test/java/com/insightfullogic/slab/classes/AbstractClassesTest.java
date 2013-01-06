@@ -13,9 +13,13 @@ public class AbstractClassesTest {
 	public void runScenario() {
 		Allocator<GameEventWithLogic> allocator = Allocator.of(GameEventWithLogic.class);
 		GameEventWithLogic event = allocator.allocate(3);
-		event.setStrength(100);
-		event.plusStrength(5);
-		assertEquals(105, event.getStrength());
+		try {
+			event.setStrength(100);
+			event.plusStrength(5);
+			assertEquals(105, event.getStrength());
+		} finally {
+			event.close();
+		}
 	}
 
 	@Test(expected=InvalidInterfaceException.class)
