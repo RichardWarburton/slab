@@ -36,4 +36,6 @@ public interface Cursor extends Closeable {
 	 */
 	public void close();
 
+	public int getCount();
+
 }

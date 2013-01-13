@@ -49,4 +49,9 @@ public class GameEventPOJO implements GameEvent {
 		throw new UnsupportedOperationException();
 	}
 
+    public int getCount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

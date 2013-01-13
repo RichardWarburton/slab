@@ -77,4 +77,8 @@ public abstract class ConcreteCursor implements Cursor {
 		move(index);
 	}
 
+	public int getCount() {
+	    return count;
+	}
+
 }
