@@ -48,13 +48,13 @@ public class GameEventScenarioTest {
 	public void resizing() {
 		Allocator<GameEvent> eventAllocator = Allocator.of(GameEvent.class);
 		GameEvent event = eventAllocator.allocate(1);
-		assertEquals(1, event.getCount());
+		assertEquals(1, event.getNumberOfObjects());
 
 		try {
 			event.setStrength(99);
 
 			event.resize(2);
-			assertEquals(2, event.getCount());
+			assertEquals(2, event.getNumberOfObjects());
 
 			event.move(1);
 			event.setStrength(1000);

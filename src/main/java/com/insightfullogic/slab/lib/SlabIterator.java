@@ -20,7 +20,7 @@ public class SlabIterator<T extends Cursor> implements Iterator<T> {
     }
 
     public boolean hasNext() {
-        return index < cursor.getCount();
+        return index < cursor.getNumberOfObjects();
     }
 
     public T next() {
