@@ -19,20 +19,31 @@ public final class Allocator<T extends Cursor> {
 
 	private AllocationListener listener;
 
+    private SlabOptions options;
+
     public static <T extends Cursor> Allocator<T> of(Class<T> representingKlass) throws InvalidInterfaceException {
-        return of(representingKlass, null);
+        return of(representingKlass, (AllocationListener) null);
     }
 
     public static <T extends Cursor> Allocator<T> of(Class<T> representingKlass, AllocationListener listener) throws InvalidInterfaceException {
-        return new Allocator<T>(representingKlass, listener);
+        return of(representingKlass, listener, SlabOptions.DEFAULT);
+    }
+    
+    public static <T extends Cursor> Allocator<T> of(Class<T> representingKlass, SlabOptions options) throws InvalidInterfaceException {
+        return new Allocator<T>(representingKlass, null, options);
+    }
+    
+    public static <T extends Cursor> Allocator<T> of(Class<T> representingKlass, AllocationListener listener, SlabOptions options) throws InvalidInterfaceException {
+        return new Allocator<T>(representingKlass, listener, options);
     }
 
-    private Allocator(Class<T> representingKlass, AllocationListener listener) {
+    private Allocator(Class<T> representingKlass, AllocationListener listener, SlabOptions options) {
 		this.listener = listener;
+        this.options = options;
 		inspector = new TypeInspector(representingKlass);
         implementation = new BytecodeGenerator<T>(inspector, representingKlass).generate();
         try {
-        	constructor = implementation.getConstructor(Integer.TYPE, AllocationHandler.class);
+        	constructor = implementation.getConstructor(Integer.TYPE, AllocationHandler.class, SlabOptions.class);
         } catch (RuntimeException e) {
         	throw e;
         } catch (Exception e) {
@@ -47,7 +58,7 @@ public final class Allocator<T extends Cursor> {
 		AllocationHandler handler = listener == null ? NO_LISTENER : makeRecorder(count);
 
 		try {
-			return constructor.newInstance(count, handler);
+			return constructor.newInstance(count, handler, options);
 		} catch (RuntimeException e) {
         	throw e;
         } catch (Exception e) {

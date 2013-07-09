@@ -30,13 +30,12 @@ public abstract class ConcreteCursor implements Cursor {
 	private final int sizeInBytes;
 	private final AllocationHandler handler;
 
-
 	private int count;
 	private int index;
 	protected long startAddress;
 	protected long pointer;
 
-	public ConcreteCursor(int count, int sizeInBytes, AllocationHandler handler) {
+	public ConcreteCursor(int count, int sizeInBytes, AllocationHandler handler, SlabOptions options) {
 		this.count = count;
 		this.sizeInBytes = sizeInBytes;
 		this.handler = handler;

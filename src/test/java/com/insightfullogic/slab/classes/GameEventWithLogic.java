@@ -1,12 +1,13 @@
 package com.insightfullogic.slab.classes;
 
 import com.insightfullogic.slab.ConcreteCursor;
+import com.insightfullogic.slab.SlabOptions;
 import com.insightfullogic.slab.implementation.AllocationHandler;
 
 public abstract class GameEventWithLogic extends ConcreteCursor {
 
-	public GameEventWithLogic(int count, int sizeInBytes, AllocationHandler handler) {
-		super(count, sizeInBytes, handler);
+	public GameEventWithLogic(int count, int sizeInBytes, AllocationHandler handler, SlabOptions options) {
+		super(count, sizeInBytes, handler, options);
 	}
 
 	public abstract int getId();

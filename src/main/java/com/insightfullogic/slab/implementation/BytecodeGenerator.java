@@ -21,7 +21,7 @@ import com.insightfullogic.slab.ConcreteCursor;
 @SuppressWarnings("restriction")
 public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 
-	private static final String GENERATED_CONSTRUCTOR = "(ILcom/insightfullogic/slab/implementation/AllocationHandler;)V";
+	private static final String GENERATED_CONSTRUCTOR = "(ILcom/insightfullogic/slab/implementation/AllocationHandler;Lcom/insightfullogic/slab/SlabOptions;)V";
 	private static final String UNSAFE_NAME = Type.getInternalName(Unsafe.class);
 	private static final String UNSAFE_DESCRIPTOR = Type.getType(Unsafe.class).getDescriptor();
 	private static final String DIRECT_CLASS_NAME = Type.getInternalName(ConcreteCursor.class);
@@ -79,12 +79,13 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 		method.visitVarInsn(ILOAD, 1);
 		method.visitLdcInsn(inspector.getSizeInBytes());
 		method.visitVarInsn(ALOAD, 2);
+		method.visitVarInsn(ALOAD, 3);
 		method.visitMethodInsn(INVOKESPECIAL,
 				classExtended,
 				"<init>",
 				constructorExtended);
 		method.visitInsn(RETURN);
-		method.visitMaxs(3, 3);
+		method.visitMaxs(4, 4);
 		method.visitEnd();
     }
 
