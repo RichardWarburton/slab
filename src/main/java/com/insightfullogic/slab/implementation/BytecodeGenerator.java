@@ -17,6 +17,7 @@ import sun.misc.Unsafe;
 
 import com.insightfullogic.slab.Cursor;
 import com.insightfullogic.slab.ConcreteCursor;
+import com.insightfullogic.slab.SlabOptions;
 
 @SuppressWarnings("restriction")
 public class BytecodeGenerator<T extends Cursor> implements Opcodes {
@@ -36,9 +37,11 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
     private final String constructorExtended;
 	private final String implementationName;
 	private final String[] interfacesImplemented;
+    private final SlabOptions options;
 
-    public BytecodeGenerator(TypeInspector inspector, Class<T> representingKlass) {
+    public BytecodeGenerator(TypeInspector inspector, Class<T> representingKlass, SlabOptions options) {
         this.inspector = inspector;
+        this.options = options;
         implementationName = "DirectMemory" + representingKlass.getSimpleName();
         if (representingKlass.isInterface()) {
         	classExtended =  DIRECT_CLASS_NAME;
@@ -65,7 +68,7 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
     	
     	writer.visitEnd();
     	
-        return (Class<T>) new GeneratedClassLoader().defineClass(implementationName, out);
+        return (Class<T>) new GeneratedClassLoader(options).defineClass(implementationName, out);
     }
 
     private void declareClass(ClassVisitor writer) {

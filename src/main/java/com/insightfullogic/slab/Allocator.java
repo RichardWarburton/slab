@@ -41,7 +41,7 @@ public final class Allocator<T extends Cursor> {
 		this.listener = listener;
         this.options = options;
 		inspector = new TypeInspector(representingKlass);
-        implementation = new BytecodeGenerator<T>(inspector, representingKlass).generate();
+        implementation = new BytecodeGenerator<T>(inspector, representingKlass, options).generate();
         try {
         	constructor = implementation.getConstructor(Integer.TYPE, AllocationHandler.class, SlabOptions.class);
         } catch (RuntimeException e) {

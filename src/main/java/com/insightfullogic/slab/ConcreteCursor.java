@@ -8,7 +8,6 @@ import java.lang.reflect.Field;
 import sun.misc.Unsafe;
 
 import com.insightfullogic.slab.implementation.AllocationHandler;
-import com.insightfullogic.slab.implementation.MemoryCalculation;
 
 @SuppressWarnings("restriction")
 public abstract class ConcreteCursor implements Cursor {
@@ -41,7 +40,6 @@ public abstract class ConcreteCursor implements Cursor {
 	protected long allocatedAddress;
 	protected long startAddress;
 	protected long pointer;
-
 
 	public ConcreteCursor(int numberOfObjects, int sizeInBytes, AllocationHandler handler, SlabOptions options) {
 		this.numberOfObjects = numberOfObjects;
