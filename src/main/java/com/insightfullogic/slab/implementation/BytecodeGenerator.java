@@ -88,7 +88,7 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 				"<init>",
 				constructorExtended);
 		method.visitInsn(RETURN);
-		method.visitMaxs(4, 4);
+		method.visitMaxs(5, 5);
 		method.visitEnd();
     }
 
@@ -121,7 +121,7 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 		method.visitMethodInsn(INVOKEVIRTUAL, UNSAFE_NAME, unsafeGetter, unsafeDescriptor);
 
 		method.visitInsn(type.returnOpcode);
-		method.visitMaxs(0, 0);
+		method.visitMaxs(4, 4);
 		method.visitEnd();
 	}
 
@@ -145,7 +145,7 @@ public class BytecodeGenerator<T extends Cursor> implements Opcodes {
 		method.visitInsn(RETURN);
 		
 		method.visitLocalVariable("value", Type.getDescriptor(type.javaEquivalent), null, start, end, 0);
-		method.visitMaxs(0, 0);
+		method.visitMaxs(4, 4);
 		method.visitEnd();
 	}
 
